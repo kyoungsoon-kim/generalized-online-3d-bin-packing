@@ -12,6 +12,13 @@ env/
 # Paper PDFs (copyright)
 *.pdf
 
+# Paper-derived docs (excluded by request)
+PAPER_GUIDE.md
+IMPLEMENTATION_GUIDE.md
+REPRODUCTION_NOTES.md
+Generalized online 3d bin packing via Transformer-based DRL.md
+원본 Lecture_Note_4. Generalized online 3d bin packing via Transformer-based DRL.md
+
 # OS / editor
 .DS_Store
 Thumbs.db
