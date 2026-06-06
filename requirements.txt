@@ -1,0 +1,5 @@
+# GOPT 3D Bin Packing — educational scaffold deps. Pin major versions only.
+torch>=2.0.0   # Packing Transformer + PPO (src/model.py, src/loss.py)
+pyyaml>=6.0
+numpy>=1.24.0
+# Windows: torch는 `py -3.12`에 설치됨. 실행:  py -3.12 -m src.train

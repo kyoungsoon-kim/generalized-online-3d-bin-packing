@@ -1,0 +1,33 @@
+# Configuration for "GOPT: Generalizable Online 3D Bin Packing via Transformer-based Deep Reinforcement Learning"
+# Paper: gopt-3dbp
+# All values cited to paper section or flagged as [UNSPECIFIED]
+
+model:
+  ems_dim: 6            # §III-B — "6-dimensional vector is normalized to [0, 1]"
+  item_dim: 3           # §III-C — "(lt, wt, ht) ... representation which is a 2x3 matrix"
+  d_model: 128          # §III-D — "embedding dimensions of both EMS and the item are set to 128"
+  n_layers: 3           # §III-D — "stacking multiple (three in practice) identical encoder blocks"
+  n_heads: 8            # [UNSPECIFIED] — number of attention heads not specified; using 8
+  d_ff: 128             # §III-D — "four MLP blocks of two layers comprising {128, 128} neurons"
+  dropout: 0.0          # [UNSPECIFIED] — not mentioned; default 0
+  norm_eps: 1.0e-5      # [UNSPECIFIED] — PyTorch default for LayerNorm
+  max_ems: 80           # §IV-A — "maximum number of EMS is set to 80"
+
+training:
+  optimizer: "adam"     # §IV-A — "The Adam optimizer"
+  lr_start: 7.0e-5      # §IV-A — "starting from 7 x 10^-5"
+  epochs: 1000          # §IV-A — "train the policy for 1000 epochs"
+  steps_per_epoch: 40000 # §IV-A — "collect a total of 40,000 environment steps ... in every epoch"
+  envs: 128             # §IV-A — "over 128 parallel environments"
+  update_steps: 640     # §IV-A — "Policy updates occur after every 640 environment steps"
+  batch_size: 128       # §IV-A — "with a batch size of 128"
+  c_value: 0.5          # §IV-A — "coefficients for value ... 0.5"
+  c_entropy: 0.001      # §IV-A — "coefficients for ... entropy loss c_2 are ... 0.001"
+  clip_ratio: 0.3       # §IV-A — "clipped ratio epsilon is 0.3"
+  gamma: 1.0            # §IV-A — "discount factor gamma is set to 1"
+  gae_lambda: 0.96      # §IV-A — "GAE with lambda_GAE = 0.96"
+
+env:
+  L: 10                 # §IV-A — "L x W x H are set to 10 x 10 x 10"
+  W: 10                 # §IV-A — "L x W x H are set to 10 x 10 x 10"
+  H: 10                 # §IV-A — "L x W x H are set to 10 x 10 x 10"
