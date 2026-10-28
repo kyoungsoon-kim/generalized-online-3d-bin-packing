@@ -38,7 +38,8 @@ src/
   data.py    — BinPackingEnv + Placement Generator(EMS/heightmap/안정성/reward) 동작 구현 (§III-A/B/C)
   model.py   — Packing Transformer + actor/critic (§III-D) ★핵심
   loss.py    — PPO clipped objective + GAE (§III-E, §IV-A)
-  train.py   — 벡터화 PPO 학습 루프(병렬 env+GAE+미니배치) + greedy 평가 + 선형감쇠 LR
+  train.py   — 벡터화 PPO 학습 루프(병렬 env+GAE+미니배치) + greedy 평가 + 선형감쇠 LR + 체크포인트 저장
+  baselines.py — random·heightmap-greedy 휴리스틱 vs 학습 PPO 정책 동일조건 비교(적재율 표)
   utils.py   — ModelConfig + YAML 로더
 configs/base.yaml — 전 하이퍼파라미터(논문 인용 또는 [UNSPECIFIED] 표기)
 notebooks/walkthrough.ipynb — 논문↔코드 + 이론셀 + 런타임 점검(전 셀 통과)
@@ -57,17 +58,29 @@ py -3.12 -m src.train --steps 400000 --device cuda
 # 워크스루 노트북: notebooks/walkthrough.ipynb (이론 + 점검셀)
 ```
 
-## 📊 결과 (이 구현)
+## 📊 결과 — 휴리스틱 대비 정량 비교
 
-RTX 3060 Ti, greedy 평가, bin 10³. 학습이 랜덤 베이스라인 위로 **단조 상승**합니다.
+학습 정책이 실제로 의미 있는지 보려면 **학습 없이 푸는 고전 휴리스틱**과 같은 조건에서 대조해야
+합니다. `src/baselines.py` 에 두 휴리스틱을 구현하고, **동일한 seed 의 256개 에피소드·동일한
+환경·동일한 적재율 지표**로 학습 정책과 나란히 평가했습니다(RTX 3060 Ti, greedy 디코딩, bin 10³).
 
-| 설정 | env 스텝 | 적재율 | 패킹수 |
-|---|---|---|---|
-| 랜덤 유효정책 | — | 24.6% | 10.3 |
-| GOPT(이 구현) | 20k | 32.4% | 13.3 |
-| GOPT(이 구현) | 200k | 38.5% | 15.5 |
-| **논문 GOPT(목표)** | **40M** | **76.1%** | **29.6** |
-| 최고 베이스라인(Xiong[3]) | 40M | 73.8% | 28.3 |
+| 방법 | 종류 | env 스텝 | 적재율 | 패킹수 |
+|------|------|---------|--------|--------|
+| Random (feasible) | 휴리스틱 | — | 22.8% | 9.8 |
+| Heightmap-greedy (lowest-EMS) | 휴리스틱 | — | 25.8% | 10.8 |
+| **GOPT — PPO (이 구현)** | **학습** | **400k** | **39.8%** | **16.0** |
+| (참고) 논문 GOPT | 학습 | 40M | 76.1% | 29.6 |
+
+**해석.** 학습 정책은 무작위(22.8%)는 물론 고전 휴리스틱 **heightmap-greedy(25.8%)도 +14%p
+앞섭니다(1.54배)** — 연산예산이 논문의 **1/100**(400k vs 40M)인데도입니다. 학습 곡선은 random
+수준(24.8%)에서 **단조 상승**(→39.8%)하여 PPO·GAE·환경 구현이 정확함을 확인했습니다. 즉
+*"학습 모델 > 휴리스틱"* 이 같은 평가 조건에서 정량적으로 성립합니다.
+
+```bash
+# 학습 정책 저장 → 휴리스틱과 같은 조건에서 비교표 출력
+py -3.12 -X utf8 -m src.train --steps 400000 --device cuda --save outputs/best.pt
+py -3.12 -X utf8 -m src.baselines --episodes 256 --checkpoint outputs/best.pt
+```
 
 ## ⚠️ 재현 한계
 

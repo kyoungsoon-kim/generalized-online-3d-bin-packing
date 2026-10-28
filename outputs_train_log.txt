@@ -1,0 +1,26 @@
+device=cuda | 312 iters x 1280 steps = 399360 env steps (paper uses 40,000,000)
+[init ] greedy utilization = 24.8%  items = 10.7
+[  15/312] steps=   19200  util=29.9%  items=12.9  lr=6.7e-05
+[  30/312] steps=   38400  util=31.3%  items=13.3  lr=6.3e-05
+[  45/312] steps=   57600  util=36.0%  items=14.8  lr=6.0e-05
+[  60/312] steps=   76800  util=36.4%  items=14.9  lr=5.7e-05
+[  75/312] steps=   96000  util=36.6%  items=15.3  lr=5.3e-05
+[  90/312] steps=  115200  util=35.6%  items=15.0  lr=5.0e-05
+[ 105/312] steps=  134400  util=38.8%  items=16.1  lr=4.6e-05
+[ 120/312] steps=  153600  util=36.9%  items=15.2  lr=4.3e-05
+[ 135/312] steps=  172800  util=35.8%  items=14.8  lr=4.0e-05
+[ 150/312] steps=  192000  util=34.7%  items=14.5  lr=3.6e-05
+[ 165/312] steps=  211200  util=37.2%  items=15.2  lr=3.3e-05
+[ 180/312] steps=  230400  util=37.8%  items=15.5  lr=3.0e-05
+[ 195/312] steps=  249600  util=39.6%  items=15.8  lr=2.6e-05
+[ 210/312] steps=  268800  util=39.2%  items=16.0  lr=2.3e-05
+[ 225/312] steps=  288000  util=38.2%  items=15.3  lr=2.0e-05
+[ 240/312] steps=  307200  util=40.5%  items=16.3  lr=1.6e-05
+[ 255/312] steps=  326400  util=40.6%  items=16.5  lr=1.3e-05
+[ 270/312] steps=  345600  util=38.6%  items=15.8  lr=9.4e-06
+[ 285/312] steps=  364800  util=38.9%  items=15.8  lr=6.1e-06
+[ 300/312] steps=  384000  util=38.7%  items=15.8  lr=2.7e-06
+[ 312/312] steps=  399360  util=40.6%  items=16.4  lr=0.0e+00
+
+[final] greedy utilization = 39.8%  items = 16.0  (paper GOPT: 76.1% / 29.6; random: ~25% / ~10)
+[saved] outputs/best.pt

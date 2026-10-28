@@ -24,3 +24,4 @@ Generalized online 3d bin packing via Transformer-based DRL.md
 Thumbs.db
 .vscode/
 .idea/
+outputs/

@@ -66,7 +66,7 @@ def evaluate(model, cfg, device, n_episodes=64, seed=12345):
     return float(np.mean(utils)), float(np.mean(nums))
 
 
-def train(config_path: str, total_steps: int, device: str):
+def train(config_path: str, total_steps: int, device: str, save_path: str | None = None):
     cfg = load_config(config_path)
     t, e, mcfg = cfg["training"], cfg["env"], cfg["model"]
     dev = torch.device(device if (device != "cuda" or torch.cuda.is_available()) else "cpu")
@@ -169,6 +169,11 @@ def train(config_path: str, total_steps: int, device: str):
     uf, numf = evaluate(model, cfg, dev, n_episodes=256)
     print(f"\n[final] greedy utilization = {uf:.1%}  items = {numf:.1f}  "
           f"(paper GOPT: 76.1% / 29.6; random: ~25% / ~10)")
+    if save_path:
+        import os
+        os.makedirs(os.path.dirname(save_path) or ".", exist_ok=True)
+        torch.save(model.state_dict(), save_path)
+        print(f"[saved] {save_path}")
     return model
 
 
@@ -177,5 +182,6 @@ if __name__ == "__main__":
     ap.add_argument("--config", default="configs/base.yaml")
     ap.add_argument("--steps", type=int, default=400_000, help="approx total env steps")
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--save", default=None, help="path to save the trained policy (e.g. outputs/best.pt)")
     args = ap.parse_args()
-    train(args.config, args.steps, args.device)
+    train(args.config, args.steps, args.device, args.save)
